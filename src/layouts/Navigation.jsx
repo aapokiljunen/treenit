@@ -18,7 +18,7 @@ export default function Navigation() {
             <AppBar >
                 <Tabs value={tab} onChange={handleChange} textColor='inherit'>
                     <Tab label='Treenit' icon={< HomeIcon />}  component={Link} to="/"/>
-                    <Tab label='Lisää treeni'   component={Link} to="newPractice"/>
+                    <Tab label='Lisää treeni'   component={Link} to="newpractice"/>
                 </Tabs>
             </AppBar>
             <Outlet />

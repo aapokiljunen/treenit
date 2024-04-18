@@ -1,22 +1,39 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import Calendar from 'react-calendar';
-import 'react-calendar/dist/Calendar.css';
+import '/src/assets/css/Calendar.css';
+import { PracticesContext } from './PracticesContext';
+import { getTypeColor } from '../layouts/Colors';
+import { Container, Typography } from '@mui/material';
+import { format } from 'date-fns';
+import { ContentPasteSearchOutlined } from '@mui/icons-material';
 
-
-
-export default function Sample() {
+export default function PracticeCalendar() {
     const [value, onChange] = useState(new Date());
 
+    const { practices, setPractices } = useContext(PracticesContext);
+
+    const tileContent = ({ date, view }) => {
+        console.log(date);
+        const practice = practices.find((p) => p.date === format(date, 'yyyy-MM-dd'));
+        if (practice) {
+            console.log(practice);
+            return (
+                <Typography style={{
+                    backgroundColor: getTypeColor(practice.typeId)[500],
+                    color: '#fff'
+                }}>
+                    {practice.typeName.charAt(0)}
+                </Typography>
+            );
+        }
+        console.log("here")
+        return null;
+    };
+
+
     return (
-        <div className="Sample">
-            <header>
-                <h1>react-calendar sample page</h1>
-            </header>
-            <div className="Sample__container">
-                <main className="Sample__container__content">
-                    <Calendar onChange={onChange} showWeekNumbers value={value} />
-                </main>
-            </div>
-        </div>
+        <Container className="calendar" sx={{ marginTop: 5 }}>
+            <Calendar onChange={onChange} value={value} navigationLabel={null} tileContent={tileContent} />
+        </Container>
     );
 }

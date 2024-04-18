@@ -9,6 +9,6 @@ const typeColors = {
     'done': 'secondary.main',
 };
 
-export function getTypeColor(type) {
-    return typeColors[type] || 'secondary';
+export function getTypeColor(typeId) {
+    return typeColors[typeId] || 'secondary';
 };
