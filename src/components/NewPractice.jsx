@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { TextField, Button, Box } from "@mui/material";
 
-function NewPractice({ practices, setPractices, info, setInfo }) {
-    const [practice, setPractice] = useState({ song: '', artist: '', reviewer: '', review: '' });
+function NewPractice({ practices, setPractices }) {
+    const [practice, setPractice] = useState({});
 
     const addPractice = () => {
         if (practice.song.length === 0 || practice.reviewer.length === 0 || practice.review.length === 0) {
