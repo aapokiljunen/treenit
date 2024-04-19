@@ -4,6 +4,7 @@ import { Typography } from '@mui/material';
 
 const PracticesContext = createContext();
 
+
 const PracticesProvider = ({ children }) => {
     const [practices, setPractices] = useState([]);
 
@@ -15,7 +16,7 @@ const PracticesProvider = ({ children }) => {
             console.error('Virhe harjoitustietojen hakemisessa:', error);
         }
     };
-
+    
     useEffect(() => {
         getPractices();
     }, []);
@@ -27,10 +28,8 @@ const PracticesProvider = ({ children }) => {
             </Typography>
         );
     };
-
-
     return (
-        <PracticesContext.Provider value={{ practices, setPractices }}>
+        <PracticesContext.Provider value={{ practices, setPractices, getPractices }}>
             {children}
         </PracticesContext.Provider>
     );

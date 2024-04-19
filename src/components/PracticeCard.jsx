@@ -1,14 +1,21 @@
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { Avatar, Card, CardActions, CardContent, CardHeader, CardMedia, Collapse, FormControlLabel, Switch, Tooltip, Typography } from "@mui/material";
-import { getPractice, handleUpdatePractice } from "../api/PracticeApi";
+import { Avatar, Card, CardActions, CardContent, CardHeader, CardMedia, Collapse, FormControlLabel, IconButton, Menu, MenuItem, Switch, Tooltip, Typography } from "@mui/material";
+import { getPractice, handleUpdatePractice, deletePractice } from "../api/PracticeApi";
 import { getTypeColor } from "../layouts/Colors";
 import ExpandMore from './functions/ExpandMore';
 import { PracticesContext } from './contexts/PracticesContext';
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
+import MenuIcon from '@mui/icons-material/Menu';
+import DeleteIcon from '@mui/icons-material/Delete';
+import { red } from '@mui/material/colors';
 
-const PracticeCard = ({ practice, formattedDate, done, expandedStates, setExpandedStates }) => {
+
+const PracticeCard = ({ practice, formattedDate, done }) => {
 
     const { practices, setPractices } = useContext(PracticesContext);
+    const { getPractices } = useContext(PracticesContext);
+    const [anchorEl, setAnchorEl] = useState(false);
+    const [expandedStates, setExpandedStates] = useState([]);
 
     const handleExpandClick = (id) => {
         if (!expandedStates.hasOwnProperty(id)) {
@@ -52,6 +59,18 @@ const PracticeCard = ({ practice, formattedDate, done, expandedStates, setExpand
         }
     };
 
+    const handleDelete = async (id) => {
+        try {
+            await deletePractice(id);
+            getPractices();
+        } catch (error) {
+            console.error('Virhe poistaessa harjoitusta: ', error);
+        }
+    };
+
+    const handleDeleteMenuClose = () => {
+        setAnchorEl(null);
+    };
 
     return (
         <Card sx={{ width: 300, bgcolor: getTypeColor(practice.done ? 'done' : practice.typeId)[100] }}>
@@ -63,9 +82,32 @@ const PracticeCard = ({ practice, formattedDate, done, expandedStates, setExpand
                         </Avatar>
                     </Tooltip>
                 }
+                action={
+                    <IconButton
+                        aria-label="deleteMenu"
+                        onClick={(event) => setAnchorEl(event.currentTarget)}
+                        aria-controls={open ? 'delete-menu' : undefined}
+                        aria-haspopup="true"
+                        aria-expanded={open ? 'true' : undefined}>
+                        <MenuIcon />
+                    </IconButton>
+                }
                 title={practice.description}
                 subheader={formattedDate}
             />
+            <Menu
+                anchorEl={anchorEl}
+                id="delete-menu"
+                open={Boolean(anchorEl)}
+                onClose={handleDeleteMenuClose}
+                onClick={handleDeleteMenuClose}
+                transformOrigin={{ horizontal: 'right', vertical: 'top' }}
+                anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+            >
+                <MenuItem onClick={() => handleDelete(practice.id)} sx={{ color: red[900] }}>
+                    <DeleteIcon /> Poista
+                </MenuItem>
+            </Menu>
             <CardMedia
                 component='img'
                 height='300'

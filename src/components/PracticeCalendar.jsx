@@ -4,7 +4,7 @@ import '/src/assets/css/Calendar.css';
 import { PracticesContext } from './contexts/PracticesContext';
 import { PracticeCalendarContext } from './contexts/PracticeCalendarContext';
 import { getTypeColor } from '../layouts/Colors';
-import { Container, Typography } from '@mui/material';
+import { Container, Paper, Typography } from '@mui/material';
 import FormatDate from './functions/FormatDate';
 import { ContentPasteSearchOutlined } from '@mui/icons-material';
 
@@ -17,12 +17,15 @@ export default function PracticeCalendar() {
         const practice = practices.find((p) => p.date === FormatDate(date));
         if (practice) {
             return (
-                <Typography style={{
-                    backgroundColor: getTypeColor(practice.typeId)[500],
-                    color: '#fff'
-                }}>
+                <Paper
+                    elevation={2}
+                    style={{
+                        backgroundColor: getTypeColor(practice.typeId)[500],
+                        color: '#fff'
+
+                    }}>
                     {practice.typeName.charAt(0)}
-                </Typography>
+                </Paper>
             );
         }
         return null;

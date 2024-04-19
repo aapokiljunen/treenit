@@ -39,3 +39,13 @@ export const addPractice = async (newPractice) => {
         throw error;
     }
 };
+
+export const deletePractice = async (id) => {
+    try {
+        const response = await axios.delete(`${API_URL}/practice/delete/${id}`);
+        console.log(response.data); 
+    } catch (error) {
+        console.error('Error deleting practice:', error);
+        throw error;
+    }
+};

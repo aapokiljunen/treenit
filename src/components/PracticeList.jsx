@@ -1,7 +1,11 @@
-import { Box, Button, Grid } from "@mui/material";
+import { Box, Button, Grid, IconButton, Modal, Typography } from "@mui/material";
 import { useContext, useState } from "react";
 import PracticeCard from './PracticeCard';
 import { PracticesContext } from './contexts/PracticesContext';
+import AddPracticeForm from "./AddPracticeForm";
+import CloseIcon from '@mui/icons-material/Close';
+import AddBoxIcon from '@mui/icons-material/AddBox';
+import '../assets/css/Styles.css'
 
 function PracticeList() {
 
@@ -9,7 +13,7 @@ function PracticeList() {
     const [locationFilter, setLocationFilter] = useState('');
     const [info, setInfo] = useState('');
     const [expandedStates, setExpandedStates] = useState([]);
-    const { practices, setPractices } = useContext(PracticesContext);
+    const { practices } = useContext(PracticesContext);
 
     const clearFilters = () => {
         setTypeFilter('');
@@ -23,10 +27,36 @@ function PracticeList() {
         )
     };
 
+    const [open, setOpen] = useState(false);
+
+    const handleOpen = () => {
+        setOpen(true);
+    };
+
+    const handleClose = () => {
+        setOpen(false);
+    };
+
     return (
-        <Box sx={{ padding: 2, marginTop: 10 }}>
-            <ControlPanel />
-            <Grid container spacing={2}>
+        <Box sx={{ padding: 2 }}>
+
+            <IconButton color='primary' onClick={handleOpen} size="large">
+                <AddBoxIcon fontSize="inherit"/>
+            </IconButton>
+            <Modal
+                open={open}
+                onClose={handleClose}
+                aria-labelledby='overlay-title'
+                aria-describedby='overlay-description'
+            >
+                <Box className="modalContent">
+                    <IconButton variant='contained' onClick={handleClose} sx={{ float: 'right' }}>
+                        <CloseIcon />
+                    </IconButton>
+                    <AddPracticeForm />
+                </Box>
+            </Modal>
+            <Grid container spacing={4}>
                 {practices.map((practice, index) => {
                     const showType = typeFilter.length === 0 || practice.typeName === typeFilter;
                     const showLocation = locationFilter.length === 0 || practice.location === locationFilter;

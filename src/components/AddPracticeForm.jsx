@@ -1,11 +1,12 @@
 import { useContext, useEffect, useState } from "react";
-import { TextField, Button, Box, MenuItem, Select } from "@mui/material";
+import { TextField, Button, Box, MenuItem, Select, Stack, Typography } from "@mui/material";
 import PracticeCalendar from "./PracticeCalendar";
 import FormatDate from './functions/FormatDate';
 import { PracticeCalendarContext } from './contexts/PracticeCalendarContext';
 import { fetchPracticeTypes } from "../api/PracticeTypeApi";
 import { fetchLocations } from "../api/LocationApi";
 import { addPractice } from "../api/PracticeApi";
+import { PracticesContext } from './contexts/PracticesContext';
 
 function AddPracticeForm() {
     const [practice, setPractice] = useState({
@@ -20,6 +21,7 @@ function AddPracticeForm() {
     const [practiceTypes, setPracticeTypes] = useState();
     const [locations, setLocations] = useState();
     const { calendarValue } = useContext(PracticeCalendarContext);
+    const { getPractices } = useContext(PracticesContext);
 
     const handleDate = () => {
         setPractice({ ...practice, date: FormatDate(calendarValue) });
@@ -34,6 +36,7 @@ function AddPracticeForm() {
                 await addPractice(practice);
                 setPractice({ description: '', notes: '', date: '', done: 0, locationId: 1, typeId: 1 });
                 setInfo('Uusi tapahtuma lisättiin');
+                getPractices();
             } catch (error) {
                 console.error('Virhe lisättäessä tapahtumaa: ', error);
             }
@@ -69,67 +72,57 @@ function AddPracticeForm() {
     }, []);
 
     return (
-        <Box sx={{ marginTop: 10 }}>
-            <TextField
-                fullWidth
-                label="Kuvaus"
-                name="description"
-                value={practice.description}
-                onChange={(e) => handleChange(e)}
-                size="small"
-                sx={{ marginBottom: 2 }}
-            />
-            <Select
-                name="typeId"
-                value={practice.typeId}
-                onChange={handleChange}
-                size="small"
-                sx={{ marginBottom: 2 }}
-            >
-                {practiceTypes?.map((type, index) => (
-                    <MenuItem key={type.id} value={type.id}>{type.name}</MenuItem>
-                ))}
-            </Select><br />
-            <Select
-                name="locationId"
-                value={practice.locationId}
-                onChange={handleChange}
-                size="small"
-                sx={{ marginBottom: 2 }}
-            >
-                {locations?.map((location, index) => (
-                    <MenuItem key={location.id} value={location.id}>{location.name}</MenuItem>
-                ))}
-            </Select>
-            <PracticeCalendar />
-            <TextField
-                fullWidth
-                value={FormatDate(calendarValue)}
-                disabled
-                size="small"
-                sx={{ marginTop: 2, marginBottom: 2 }}
-            />
-            <TextField
-                fullWidth
-                multiline
-                label="Huomioita"
-                name="notes"
-                value={practice.notes}
-                onChange={(e) => handleChange(e)}
-                minRows={3}
-                size="small"
-                sx={{ marginBottom: 2 }}
-            />
-            <Button
-                variant="contained"
-                onClick={handleDate}
-                size="small"
-                sx={{ marginBottom: 1 }}
-            >
-                Lisää harjoitus
-            </Button>
-            <p style={{ color: 'red', marginBottom: 0 }}>{info}</p>
-        </Box>
+        <Box sx={{ padding: 5 }}>
+            <Stack spacing={2} sx={{ width: 500 }}>
+                <Typography variant="h5">Lisää uusi harjoitus</Typography>
+                <TextField
+                    label="Kuvaus"
+                    name="description"
+                    value={practice.description}
+                    onChange={(e) => handleChange(e)}
+                    inputProps={{ maxLength: 25 }}
+                    size="small"
+                />
+                <Select
+                    name="typeId"
+                    value={practice.typeId}
+                    onChange={handleChange}
+                    size="small"
+                >
+                    {practiceTypes?.map((type, index) => (
+                        <MenuItem key={type.id} value={type.id}>{type.name}</MenuItem>
+                    ))}
+                </Select>
+                <Select
+                    name="locationId"
+                    value={practice.locationId}
+                    onChange={handleChange}
+                    size="small"
+                >
+                    {locations?.map((location, index) => (
+                        <MenuItem key={location.id} value={location.id}>{location.name}</MenuItem>
+                    ))}
+                </Select>
+                <TextField
+                    multiline
+                    label="Huomioita"
+                    name="notes"
+                    value={practice.notes}
+                    onChange={(e) => handleChange(e)}
+                    minRows={3}
+                    size="small"
+                />
+                <PracticeCalendar />
+                <Button
+                    variant="contained"
+                    onClick={handleDate}
+                    size="small"
+                >
+                    Lisää harjoitus
+                </Button>
+                <p style={{ color: 'red', marginBottom: 0 }}>{info}</p>
+            </Stack >
+        </Box >
     );
 }
 

@@ -5,21 +5,9 @@ import { Link, Outlet } from 'react-router-dom';
 
 export default function Navigation() {
 
-    const [tab, setTab] = useState(0)
-
-    const handleChange = (event, value) => {
-        setTab(value);
-    }
-
-
-    return (
+     return (
         <Box>
-            <AppBar >
-                <Tabs value={tab} onChange={handleChange} textColor='inherit'>
-                    <Tab label='Treenit' icon={< HomeIcon />}  component={Link} to="/"/>
-                    <Tab label='Lisää treeni'   component={Link} to="addpractice"/>
-                </Tabs>
-            </AppBar>
+
             <Outlet />
         </Box>
     )

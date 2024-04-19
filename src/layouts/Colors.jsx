@@ -1,12 +1,12 @@
-import { blueGrey, lightBlue, orange, red, yellow } from "@mui/material/colors";
+import { cyan, green, lightGreen, lime, red, teal, yellow } from "@mui/material/colors";
 
 const typeColors = {
-    1: lightBlue,
+    1: teal,
     2: red,
-    3: blueGrey,
-    4: yellow,
-    5: orange,
-    'done': 'secondary.main',
+    3: lightGreen,
+    4: lime,
+    5: yellow,
+    'done': 'secondary',
 };
 
 export function getTypeColor(typeId) {
