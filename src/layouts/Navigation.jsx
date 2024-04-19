@@ -1,7 +1,6 @@
 import HomeIcon from '@mui/icons-material/Home';
 import { AppBar, Box, Tab, Tabs } from "@mui/material";
 import { useState } from "react";
-import PracticeList from '../components/PracticeList';
 import { Link, Outlet } from 'react-router-dom';
 
 export default function Navigation() {
@@ -18,7 +17,7 @@ export default function Navigation() {
             <AppBar >
                 <Tabs value={tab} onChange={handleChange} textColor='inherit'>
                     <Tab label='Treenit' icon={< HomeIcon />}  component={Link} to="/"/>
-                    <Tab label='Lisää treeni'   component={Link} to="newpractice"/>
+                    <Tab label='Lisää treeni'   component={Link} to="addpractice"/>
                 </Tabs>
             </AppBar>
             <Outlet />

@@ -4,7 +4,7 @@ const API_URL = 'http://localhost:8081';
 
 export const fetchPractises = async () => {
     try {
-        return await axios.get(`${API_URL}/practices`);
+        return await axios.get(`${API_URL}/practice/all`);
     } catch (error)  {
         console.error('Error fetching practices:', error);
         throw error;
@@ -22,10 +22,20 @@ export const getPractice = async (id) => {
 
 export const handleUpdatePractice = async (updateData) => {
     try {
-        const response = await axios.post(`${API_URL}/updatePractice`, updateData);
+        const response = await axios.post(`${API_URL}/practice/update`, updateData);
         console.log(response.data); 
     } catch (error) {
         console.error('Error updating column:', error);
+        throw error;
+    }
+};
+
+export const addPractice = async (newPractice) => {
+    try {
+        const response = await axios.post(`${API_URL}/practice/add`, newPractice);
+        console.log(response.data); 
+    } catch (error) {
+        console.error('Error adding practice:', error);
         throw error;
     }
 };

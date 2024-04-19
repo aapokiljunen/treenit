@@ -1,7 +1,7 @@
 import { Link, createBrowserRouter, isRouteErrorResponse, useRouteError } from 'react-router-dom';
 import Navigation from '../layouts/Navigation';
 import PracticeList from '../components/PracticeList';
-import NewPractice from '../components/NewPractice';
+import AddPracticeForm from '../components/AddPracticeForm';
 import { Box } from '@mui/material';
 
 const HandleError = () => {
@@ -30,8 +30,8 @@ const router = createBrowserRouter([
                 element: <PracticeList />
             },
             {
-                path: "newpractice",
-                element: <NewPractice />
+                path: "addpractice",
+                element: <AddPracticeForm />
             },
         ],
     },

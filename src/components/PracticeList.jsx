@@ -1,11 +1,7 @@
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { Avatar, Box, Button, Card, CardActions, CardContent, CardHeader, CardMedia, Collapse, FormControlLabel, Grid, IconButton, Switch, Tooltip, Typography, styled } from "@mui/material";
+import { Box, Button, Grid } from "@mui/material";
 import { useContext, useState } from "react";
-import { getPractice, handleUpdatePractice } from "../api/PracticeApi";
-import { getTypeColor } from "../layouts/Colors";
-import Sample from './PracticeCalendar';
-import { PracticesContext } from './PracticesContext';
 import PracticeCard from './PracticeCard';
+import { PracticesContext } from './contexts/PracticesContext';
 
 function PracticeList() {
 
@@ -13,10 +9,7 @@ function PracticeList() {
     const [locationFilter, setLocationFilter] = useState('');
     const [info, setInfo] = useState('');
     const [expandedStates, setExpandedStates] = useState([]);
-
     const { practices, setPractices } = useContext(PracticesContext);
-
-
 
     const clearFilters = () => {
         setTypeFilter('');
@@ -31,9 +24,8 @@ function PracticeList() {
     };
 
     return (
-        <Box sx={{ padding: 2 }}>
+        <Box sx={{ padding: 2, marginTop: 10 }}>
             <ControlPanel />
-            <Sample />
             <Grid container spacing={2}>
                 {practices.map((practice, index) => {
                     const showType = typeFilter.length === 0 || practice.typeName === typeFilter;

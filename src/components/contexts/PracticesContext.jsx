@@ -1,5 +1,5 @@
 import { createContext, useEffect, useState } from 'react';
-import { fetchPractises } from '../api/PracticeApi';
+import { fetchPractises } from '../../api/PracticeApi';
 import { Typography } from '@mui/material';
 
 const PracticesContext = createContext();

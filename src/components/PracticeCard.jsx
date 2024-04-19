@@ -1,43 +1,14 @@
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { Avatar, Card, CardActions, CardContent, CardHeader, CardMedia, Collapse, FormControlLabel, Switch, Tooltip, Typography } from "@mui/material";
-import ExpandMore from './ExpandMore';
 import { getPractice, handleUpdatePractice } from "../api/PracticeApi";
 import { getTypeColor } from "../layouts/Colors";
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { useState } from "react";
+import ExpandMore from './functions/ExpandMore';
+import { PracticesContext } from './contexts/PracticesContext';
+import { useContext } from 'react';
 
+const PracticeCard = ({ practice, formattedDate, done, expandedStates, setExpandedStates }) => {
 
-// const FilterLink = ({ onClick, label, value }) => (
-//     <Typography component='span' sx={{ textDecoration: 'none', color: 'inherit', cursor: 'pointer' }} onClick={() => onClick(value)}>
-//         {label}
-//     </Typography>
-// );
-
-// const filterType = (filterValue) => {
-//     setTypeFilter(filterValue);
-//     setInfo(`Näytetään harjoitukset tyypille ${filterValue}`);
-//     setLocationFilter('');
-// };
-
-// const filterLocation = (filterValue) => {
-//     setLocationFilter(filterValue);
-//     setInfo(`Näytetään harjoitukset sijainnissa ${filterValue}`);
-//     setTypeFilter('');
-// };
-
-// const handleChangeDone = async (event, id) => {
-//     const checked = event.target.checked;
-//     try {
-//         const updateData = { columnName: 'done', newValue: checked ? 1 : 0, id: id };
-//         await handleUpdatePractice(updateData);
-//         const response = await getPractice(id);
-//         const updatedPractice = response.data;
-//         setPractices(prevList => prevList.map(item => item.id === id ? updatedPractice : item));
-//     } catch (error) {
-//         console.error('Virhe päivittäessä harjoitusta: ', error);
-//     }
-// };
-
-const PracticeCard = ({ practice, formattedDate, done, expandedStates, setExpandedStates}) => {
+    const { practices, setPractices } = useContext(PracticesContext);
 
     const handleExpandClick = (id) => {
         if (!expandedStates.hasOwnProperty(id)) {
@@ -55,19 +26,19 @@ const PracticeCard = ({ practice, formattedDate, done, expandedStates, setExpand
             {label}
         </Typography>
     );
-    
+
     const filterType = (filterValue) => {
         setTypeFilter(filterValue);
         setInfo(`Näytetään harjoitukset tyypille ${filterValue}`);
         setLocationFilter('');
     };
-    
+
     const filterLocation = (filterValue) => {
         setLocationFilter(filterValue);
         setInfo(`Näytetään harjoitukset sijainnissa ${filterValue}`);
         setTypeFilter('');
     };
-    
+
     const handleChangeDone = async (event, id) => {
         const checked = event.target.checked;
         try {
@@ -80,7 +51,7 @@ const PracticeCard = ({ practice, formattedDate, done, expandedStates, setExpand
             console.error('Virhe päivittäessä harjoitusta: ', error);
         }
     };
-    
+
 
     return (
         <Card sx={{ width: 300, bgcolor: getTypeColor(practice.done ? 'done' : practice.typeId)[100] }}>
@@ -111,7 +82,7 @@ const PracticeCard = ({ practice, formattedDate, done, expandedStates, setExpand
             </CardContent>
             <CardActions disableSpacing>
                 <FormControlLabel
-                    control={<Switch checked={done} onChange={(event) => handleChangeDone(event, practice.id)} />}
+                    control={<Switch checked={done} onChange={(event) => handleChangeDone(event, practice.id)} size="small" />}
                     label='Suoritettu'
                 />
                 <ExpandMore
