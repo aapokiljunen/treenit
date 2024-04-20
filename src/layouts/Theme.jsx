@@ -1,12 +1,20 @@
 import { createTheme } from '@mui/material';
-import { lightBlue } from '@mui/material/colors';
+import { blueGrey } from '@mui/material/colors';
 
 
 const theme = createTheme({
     palette: {
-        primary: { main: lightBlue[500], contrastText: '#FFFFFF' },
-        secondary: { main: lightBlue[800], contrastText: '#FFFFFF' },
-        text: { primary: lightBlue[500] },
+        primary: {
+            main: blueGrey[500],
+            contrastText: '#FFFFFF'
+        },
+        secondary: {
+            main: blueGrey[800],
+            contrastText: '#FFFFFF'
+        },
+        text: {
+            primary: blueGrey[800]
+        },
     },
     typography: {
         fontFamily: "'Figtree'",

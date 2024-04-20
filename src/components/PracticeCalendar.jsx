@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import Calendar from 'react-calendar';
 import '/src/assets/css/Calendar.css';
 import { PracticesContext } from './contexts/PracticesContext';
@@ -34,6 +34,9 @@ export default function PracticeCalendar() {
     const handleChange = (newDate) => {
         setCalendarValue(newDate);
     }
+
+    useEffect(() => {
+    }, [calendarValue]);
 
     return (
         <Container className="practiceCalendar" >

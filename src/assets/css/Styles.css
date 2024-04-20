@@ -8,3 +8,18 @@
     border-radius: 8px;
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
 }
+
+.highlight-effect {
+    animation: flash 3s infinite alternate;
+}
+
+@keyframes flash {
+    from {
+        -webkit-box-shadow: 0 0 10px red;
+        box-shadow: 0 0 10px red;
+    }
+
+    to {
+        box-shadow: "inherit";
+    }
+}

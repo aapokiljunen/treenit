@@ -24,9 +24,15 @@ function AddPracticeForm() {
     const { getPractices } = useContext(PracticesContext);
 
     const handleDate = () => {
+        console.log(calendarValue);
         setPractice({ ...practice, date: FormatDate(calendarValue) });
-        handleAdd();
     }
+
+    useEffect(() => {
+        if (practice.date !== '') {
+            handleAdd();
+        }
+    }, [practice.date]);
 
     const handleAdd = async () => {
         if (!practice.description || !practice.date) {
@@ -34,8 +40,15 @@ function AddPracticeForm() {
         } else {
             try {
                 await addPractice(practice);
-                setPractice({ description: '', notes: '', date: '', done: 0, locationId: 1, typeId: 1 });
-                setInfo('Uusi tapahtuma lisättiin');
+                setPractice({
+                    description: '',
+                    notes: '',
+                    date: '',
+                    done: 0,
+                    locationId: 1,
+                    typeId: 1
+                });
+                setInfo(`Lisättiin ${practice.description} `);
                 getPractices();
             } catch (error) {
                 console.error('Virhe lisättäessä tapahtumaa: ', error);

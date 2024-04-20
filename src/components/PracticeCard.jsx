@@ -29,7 +29,14 @@ const PracticeCard = ({ practice, formattedDate, done }) => {
     };
 
     const FilterLink = ({ onClick, label, value }) => (
-        <Typography component='span' sx={{ textDecoration: 'none', color: 'inherit', cursor: 'pointer' }} onClick={() => onClick(value)}>
+        <Typography
+            component='span'
+            sx={{
+                textDecoration: 'none',
+                color: 'inherit',
+                cursor: 'pointer'
+            }}
+            onClick={() => onClick(value)}>
             {label}
         </Typography>
     );
@@ -49,7 +56,11 @@ const PracticeCard = ({ practice, formattedDate, done }) => {
     const handleChangeDone = async (event, id) => {
         const checked = event.target.checked;
         try {
-            const updateData = { columnName: 'done', newValue: checked ? 1 : 0, id: id };
+            const updateData = {
+                columnName: 'done',
+                newValue: checked ? 1 : 0,
+                id: id
+            };
             await handleUpdatePractice(updateData);
             const response = await getPractice(id);
             const updatedPractice = response.data;
@@ -73,7 +84,10 @@ const PracticeCard = ({ practice, formattedDate, done }) => {
     };
 
     return (
-        <Card sx={{ width: 300, bgcolor: getTypeColor(practice.done ? 'done' : practice.typeId)[100] }}>
+        <Card sx={{
+            width: 315,
+            bgcolor: getTypeColor(practice.done ? 'done' : practice.typeId)[100]
+        }}>
             <CardHeader
                 avatar={
                     <Tooltip title={practice.typeName}>
@@ -110,7 +124,7 @@ const PracticeCard = ({ practice, formattedDate, done }) => {
             </Menu>
             <CardMedia
                 component='img'
-                height='300'
+                height='315'
                 image={practice.image || `src/assets/pics/defaultpics/${practice.typeId}.jpg`}
                 alt={`${practice.typeName} kuva`}
                 title={practice.typeName}
@@ -124,7 +138,11 @@ const PracticeCard = ({ practice, formattedDate, done }) => {
             </CardContent>
             <CardActions disableSpacing>
                 <FormControlLabel
-                    control={<Switch checked={done} onChange={(event) => handleChangeDone(event, practice.id)} size="small" />}
+                    control={
+                        <Switch
+                            checked={done}
+                            onChange={(event) => handleChangeDone(event, practice.id)}
+                            size="small" />}
                     label='Suoritettu'
                 />
                 <ExpandMore
