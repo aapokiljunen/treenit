@@ -1,4 +1,4 @@
-import { Box, Button, Container, Fab, FormControlLabel, Grid, IconButton, Modal, Paper, Switch, Typography } from "@mui/material";
+import { Box, Button, Collapse, Container, Fab, FormControlLabel, Grid, IconButton, Modal, Paper, Switch, Typography } from "@mui/material";
 import { useContext, useEffect, useRef, useState } from "react";
 import PracticeCard from './PracticeCard';
 import { PracticesContext } from './contexts/PracticesContext';
@@ -9,6 +9,8 @@ import '../assets/css/Styles.css'
 import { PracticeCalendarContext } from './contexts/PracticeCalendarContext';
 import PracticeCalendar from "./PracticeCalendar";
 import FormatDate from "./functions/FormatDate";
+import ExpandMore from "./functions/ExpandMore";
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 function PracticeList() {
 
@@ -19,24 +21,24 @@ function PracticeList() {
     const { practices } = useContext(PracticesContext);
     const [showGone, setShowGone] = useState(false);
     const [showDone, setShowDone] = useState(true);
+    const [calendarOn, setCalendarOn] = useState(false);
     const gridRef = useRef(null);
+    const [openModal, setOpenModal] = useState(false);
 
     const clearFilters = () => {
         setTypeFilter('');
         setLocationFilter('');
         setInfo('');
     };
-    const [open, setOpen] = useState(false);
+    
 
     const handleClose = () => {
-        setOpen(false);
+        setOpenModal(false);
     };
 
     const findDaysPractice = () => {
         const cV = FormatDate(calendarValue);
-        console.log(cV);
         const practice = practices.find(p => p.date === cV);
-        console.log(practice)
         let id;
         if (practice) {
             id = practice.id;
@@ -44,7 +46,6 @@ function PracticeList() {
             id = 0;
         }
         if (id) {
-            console.log(id)
             return Number(id)
         }
         return -1;
@@ -79,16 +80,26 @@ function PracticeList() {
 
     return (
         <Box sx={{ padding: 2 }}>
-            <PracticeCalendar />
+            <Fab
+                color='primary'
+                aria-label='add'
+                size='large'
+                onClick={() => setOpenModal(true)}
+                sx={{
+                    float: 'right',
+                    marginRight: 5
+                }}>
+                <AddIcon />
+            </Fab>
             <Container
                 aria-label='control-panel'
+                className="control-panel"
                 sx={{
                     boxShadow: '0px 2px 1px -1px rgba(0,0,0,0.2),0px 1px 1px 0px rgba(0,0,0,0.14),0px 1px 3px 0px rgba(0,0,0,0.12)',
                     borderRadius: '4px',
-                    width: 315,
+                    width: 335,
                     marginLeft: 0,
                     marginBottom: 2,
-                    paddingLeft: '1px'
                 }}
             >
                 <FormControlLabel
@@ -107,9 +118,20 @@ function PracticeList() {
                         />}
                     label='Menneet'
                 />
+                <ExpandMore
+                    expand={calendarOn}
+                    onClick={() => setCalendarOn(!calendarOn)}
+                    aria-expanded={calendarOn}
+                    aria-label="Näytä kartta"
+                >
+                    <ExpandMoreIcon />
+                </ExpandMore>
+                <Collapse className='control-panel' in={calendarOn} timeout="auto" unmountOnExit>
+                    <PracticeCalendar />
+                </Collapse>
             </Container>
             <Modal
-                open={open}
+                open={openModal}
                 onClose={handleClose}
                 aria-labelledby='overlay-title'
                 aria-describedby='overlay-description'
