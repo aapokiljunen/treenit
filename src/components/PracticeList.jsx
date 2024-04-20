@@ -1,4 +1,4 @@
-import { Box, Button, Collapse, Container, Fab, FormControlLabel, Grid, IconButton, Modal, Paper, Switch, Typography } from "@mui/material";
+import { Box, Button, Collapse, Container, Fab, FormControlLabel, Grid, IconButton, MenuItem, Modal, Paper, Select, Switch, Typography } from "@mui/material";
 import { useContext, useEffect, useRef, useState } from "react";
 import PracticeCard from './PracticeCard';
 import { PracticesContext } from './contexts/PracticesContext';
@@ -11,11 +11,13 @@ import PracticeCalendar from "./PracticeCalendar";
 import FormatDate from "./functions/FormatDate";
 import ExpandMore from "./functions/ExpandMore";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { fetchPracticeTypes } from "../api/PracticeTypeApi";
+import { fetchLocations } from "../api/LocationApi";
 
 function PracticeList() {
 
-    const [typeFilter, setTypeFilter] = useState('');
-    const [locationFilter, setLocationFilter] = useState('');
+    const [typeFilter, setTypeFilter] = useState(0);
+    const [locationFilter, setLocationFilter] = useState(0);
     const [info, setInfo] = useState('');
     const { calendarValue } = useContext(PracticeCalendarContext);
     const { practices } = useContext(PracticesContext);
@@ -24,13 +26,30 @@ function PracticeList() {
     const [calendarOn, setCalendarOn] = useState(false);
     const gridRef = useRef(null);
     const [openModal, setOpenModal] = useState(false);
+    const [practiceTypes, setPracticeTypes] = useState([]);
+    const [locations, setLocations] = useState([]);
 
     const clearFilters = () => {
-        setTypeFilter('');
-        setLocationFilter('');
+        setTypeFilter(0);
+        setLocationFilter(0);
         setInfo('');
     };
-    
+
+    const getPracticeTypes = async () => {
+        try {
+            const types = await fetchPracticeTypes();
+            setPracticeTypes(types.data);
+        } catch (error) {
+            console.error('Virhe tyyppien hakemisessa:', error);
+        }
+    };
+
+    const filterType = (filterValue) => {
+        setTypeFilter(filterValue);
+        setInfo(`Näytetään harjoitukset tyypille ${filterValue}`);
+        setLocationFilter(0);
+    };
+
 
     const handleClose = () => {
         setOpenModal(false);
@@ -51,7 +70,12 @@ function PracticeList() {
         return -1;
     };
 
-    //Tämä scrollaus on täysin chatgpt:n kanssa tehty, että tätä ei varsinaisesti varmaan kuulu koulutyöhön arvioida. 
+    console.log("type" + typeFilter);
+    console.log("loca:" + locationFilter);
+
+
+    //Tämä scrollauksen logiikka on täysin chatgpt:n visioima, ja muutenkin hinkattu sillä kuntoon,
+    // että kuuluuko tätä sitten varsinaisesti koulutyöhön arvioida. 
     //Sinällään kyllä hemmetin tyytyväinen olen kun sain pitkän taistelun jälkeen toimimaan
 
     const scrollToSelectedCard = () => {
@@ -63,7 +87,10 @@ function PracticeList() {
                 const selectedGridItem = gridElement.querySelector(`[data-key="${cardIndex}"] .MuiCard-root`);
                 console.log(selectedGridItem);
                 if (selectedGridItem) {
-                    selectedGridItem.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    selectedGridItem.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'center'
+                    });
                     selectedGridItem.classList.add('highlight-effect');
                     setTimeout(() => {
                         selectedGridItem.classList.remove('highlight-effect');
@@ -71,12 +98,15 @@ function PracticeList() {
                 }
             }
         }
-
     };
 
     useEffect(() => {
         scrollToSelectedCard();
     }, [calendarValue]);
+
+    useEffect(() => {
+        getPracticeTypes();
+    }, []);
 
     return (
         <Box sx={{ padding: 2 }}>
@@ -97,11 +127,19 @@ function PracticeList() {
                 sx={{
                     boxShadow: '0px 2px 1px -1px rgba(0,0,0,0.2),0px 1px 1px 0px rgba(0,0,0,0.14),0px 1px 3px 0px rgba(0,0,0,0.12)',
                     borderRadius: '4px',
-                    width: 335,
+                    width: 530,
                     marginLeft: 0,
                     marginBottom: 2,
                 }}
             >
+                <ExpandMore
+                    expand={calendarOn}
+                    onClick={() => setCalendarOn(!calendarOn)}
+                    aria-expanded={calendarOn}
+                    aria-label="Näytä kartta"
+                >
+                    <ExpandMoreIcon />
+                </ExpandMore>
                 <FormControlLabel
                     control={
                         <Switch
@@ -118,18 +156,24 @@ function PracticeList() {
                         />}
                     label='Menneet'
                 />
-                <ExpandMore
-                    expand={calendarOn}
-                    onClick={() => setCalendarOn(!calendarOn)}
-                    aria-expanded={calendarOn}
-                    aria-label="Näytä kartta"
+                <Select
+                    name="typeFilter"
+                    value={typeFilter}
+                    onChange={(e) => filterType(e.target.value)}
+                    size="small"
                 >
-                    <ExpandMoreIcon />
-                </ExpandMore>
+                    <MenuItem value={0} disabled size="inherit">
+                        Näytä harjoitustyyppi
+                    </MenuItem>
+                    {practiceTypes?.map((type, index) => (
+                        <MenuItem key={type.id} value={type.id}>{type.name}</MenuItem>
+                    ))}
+                </Select>
                 <Collapse className='control-panel' in={calendarOn} timeout="auto" unmountOnExit>
                     <PracticeCalendar />
                 </Collapse>
             </Container>
+            <Typography sx={{paddingBottom:2}}>{info}</Typography>
             <Modal
                 open={openModal}
                 onClose={handleClose}
@@ -145,8 +189,8 @@ function PracticeList() {
             </Modal>
             <Grid ref={gridRef} container spacing={4}>
                 {practices.map((practice, index) => {
-                    const showType = typeFilter.length === 0 || practice.typeName === typeFilter;
-                    const showLocation = locationFilter.length === 0 || practice.location === locationFilter;
+                    const showType = practice.typeId == typeFilter || typeFilter == 0;
+                    const showLocation = practice.locationId == locationFilter || locationFilter == 0;
                     const date = new Date(practice.date);
                     const formattedDate = date.toLocaleDateString('fi-FI')
                     const done = practice.done != 0;
@@ -159,6 +203,9 @@ function PracticeList() {
                                     practice={practice}
                                     formattedDate={formattedDate}
                                     done={done}
+                                    setLocationFilter={setLocationFilter}
+                                    setTypeFilter={setTypeFilter}
+                                    setInfo={setInfo}
                                 />
                             </Grid>
                         );
@@ -166,8 +213,8 @@ function PracticeList() {
                 })}
             </Grid>
             {
-                (typeFilter.length > 0 || locationFilter.length > 0) &&
-                <div><Button sx={{ marginTop: 2 }} variant='contained' onClick={clearFilters}>Tyhjennä suodattimet</Button></div>
+                (typeFilter > 0 || locationFilter > 0) &&
+                <div><Button sx={{ marginTop: 2 }} variant='contained' onClick={clearFilters}>Näytä kaikki harjoitukset</Button></div>
             }
         </Box >
     );

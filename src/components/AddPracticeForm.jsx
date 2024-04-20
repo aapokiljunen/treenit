@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import { TextField, Button, Box, MenuItem, Select, Stack, Typography } from "@mui/material";
+import { TextField, Button, Box, MenuItem, Select, Stack, Typography, IconButton, Container } from "@mui/material";
 import PracticeCalendar from "./PracticeCalendar";
 import FormatDate from './functions/FormatDate';
 import { PracticeCalendarContext } from './contexts/PracticeCalendarContext';
@@ -7,6 +7,7 @@ import { fetchPracticeTypes } from "../api/PracticeTypeApi";
 import { fetchLocations } from "../api/LocationApi";
 import { addPractice } from "../api/PracticeApi";
 import { PracticesContext } from './contexts/PracticesContext';
+import AddBoxIcon from '@mui/icons-material/AddBox';
 
 function AddPracticeForm() {
     const [practice, setPractice] = useState({
@@ -14,8 +15,8 @@ function AddPracticeForm() {
         notes: '',
         date: '',
         done: 0,
-        locationId: 1,
-        typeId: 1,
+        locationId: 0,
+        typeId: 0,
     });
     const [info, setInfo] = useState('')
     const [practiceTypes, setPracticeTypes] = useState();
@@ -35,7 +36,7 @@ function AddPracticeForm() {
     }, [practice.date]);
 
     const handleAdd = async () => {
-        if (!practice.description || !practice.date) {
+        if (!practice.description || !practice.date || practice.typeId == 0 || practice.locationId == 0) {
             setInfo('Kenttä tyhjä. Ei voida lisätä tapahtumaa');
         } else {
             try {
@@ -46,7 +47,7 @@ function AddPracticeForm() {
                     date: '',
                     done: 0,
                     locationId: 1,
-                    typeId: 1
+                    typeId: 0
                 });
                 setInfo(`Lisättiin ${practice.description} `);
                 getPractices();
@@ -102,20 +103,45 @@ function AddPracticeForm() {
                     onChange={handleChange}
                     size="small"
                 >
+                    <MenuItem value={0} disabled>
+                        Valitse harjoitustyyppi
+                    </MenuItem>
                     {practiceTypes?.map((type, index) => (
                         <MenuItem key={type.id} value={type.id}>{type.name}</MenuItem>
                     ))}
                 </Select>
-                <Select
-                    name="locationId"
-                    value={practice.locationId}
-                    onChange={handleChange}
-                    size="small"
+                <Box
+                    name="location-container"
+                    sx={{
+                        display: 'flex',
+                        alignItems: 'center',
+                    }}
                 >
-                    {locations?.map((location, index) => (
-                        <MenuItem key={location.id} value={location.id}>{location.name}</MenuItem>
-                    ))}
-                </Select>
+                    <Select
+                        name="locationId"
+                        value={practice.locationId}
+                        onChange={handleChange}
+                        size="small"
+                        sx={{
+                            flexGrow: 1,
+                        }}
+                    >
+                        <MenuItem value={0} disabled>
+                            Valitse sijainti
+                        </MenuItem>
+                        {locations?.map((location, index) => (
+                            <MenuItem key={location.id} value={location.id}>{location.name}</MenuItem>
+                        ))}
+                    </Select>
+                    <IconButton
+                        color='primary'
+                        aria-label='add'
+                        size='large'
+                        onClick={() => setOpenModal(true)}
+                    >
+                        <AddBoxIcon />
+                    </IconButton>
+                </Box>
                 <TextField
                     multiline
                     label="Huomioita"

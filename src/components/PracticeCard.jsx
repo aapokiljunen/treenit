@@ -1,5 +1,5 @@
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { Avatar, Card, CardActions, CardContent, CardHeader, CardMedia, Collapse, FormControlLabel, IconButton, Menu, MenuItem, Switch, Tooltip, Typography } from "@mui/material";
+import { Avatar, Card, CardActions, CardContent, CardHeader, CardMedia, Checkbox, Collapse, FormControlLabel, IconButton, Menu, MenuItem, Switch, Tooltip, Typography } from "@mui/material";
 import { getPractice, handleUpdatePractice, deletePractice } from "../api/PracticeApi";
 import { getTypeColor } from "../layouts/Colors";
 import ExpandMore from './functions/ExpandMore';
@@ -10,7 +10,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { red } from '@mui/material/colors';
 
 
-const PracticeCard = ({ practice, formattedDate, done }) => {
+const PracticeCard = ({ practice, formattedDate, done, setLocationFilter, setTypeFilter, setInfo }) => {
 
     const { practices, setPractices } = useContext(PracticesContext);
     const { getPractices } = useContext(PracticesContext);
@@ -44,13 +44,14 @@ const PracticeCard = ({ practice, formattedDate, done }) => {
     const filterType = (filterValue) => {
         setTypeFilter(filterValue);
         setInfo(`Näytetään harjoitukset tyypille ${filterValue}`);
-        setLocationFilter('');
+        setLocationFilter(0);
     };
 
     const filterLocation = (filterValue) => {
+        console.log("filter" + filterValue);
         setLocationFilter(filterValue);
         setInfo(`Näytetään harjoitukset sijainnissa ${filterValue}`);
-        setTypeFilter('');
+        setTypeFilter(0);
     };
 
     const handleChangeDone = async (event, id) => {
@@ -132,14 +133,22 @@ const PracticeCard = ({ practice, formattedDate, done }) => {
             />
             <CardContent>
                 <Typography variant='body2' color='text.secondary'>
-                    <FilterLink onClick={filterType} label={practice.typeName} value={practice.typeName} /><br />
-                    <FilterLink onClick={filterLocation} label={practice.location} value={practice.location} />
+                    <FilterLink
+                        onClick={filterType}
+                        label={practice.typeName}
+                        value={practice.typeId}
+                    /><br />
+                    <FilterLink
+                        onClick={filterLocation}
+                        label={practice.location}
+                        value={practice.locationId}
+                    />
                 </Typography>
             </CardContent>
             <CardActions disableSpacing>
                 <FormControlLabel
                     control={
-                        <Switch
+                        <Checkbox
                             checked={done}
                             onChange={(event) => handleChangeDone(event, practice.id)}
                             size="small" />}
