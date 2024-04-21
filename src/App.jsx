@@ -5,16 +5,19 @@ import router from './pages/Routing';
 import theme from './layouts/Theme';
 import { PracticesProvider } from './components/contexts/PracticesContext';
 import { PracticeCalendarProvider } from './components/contexts/PracticeCalendarContext';
+import { LocationsProvider } from './components/contexts/LocationsContext';
 
 function App() {
     return (
         <ThemeProvider theme={theme}>
-            <PracticesProvider>
-                <PracticeCalendarProvider>
-                    <CssBaseline />
-                    <RouterProvider router={router} />
-                </PracticeCalendarProvider>
-            </PracticesProvider>
+            <LocationsProvider>
+                <PracticesProvider>
+                    <PracticeCalendarProvider>
+                        <CssBaseline />
+                        <RouterProvider router={router} />
+                    </PracticeCalendarProvider>
+                </PracticesProvider>
+            </LocationsProvider>
         </ThemeProvider>
     )
 }

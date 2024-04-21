@@ -1,18 +1,19 @@
-import { Box, Button, Collapse, Container, Fab, FormControlLabel, Grid, IconButton, MenuItem, Modal, Paper, Select, Switch, Typography } from "@mui/material";
-import { useContext, useEffect, useRef, useState } from "react";
-import PracticeCard from './PracticeCard';
-import { PracticesContext } from './contexts/PracticesContext';
-import AddPracticeForm from "./AddPracticeForm";
-import CloseIcon from '@mui/icons-material/Close';
 import AddIcon from '@mui/icons-material/Add';
-import '../assets/css/Styles.css'
-import { PracticeCalendarContext } from './contexts/PracticeCalendarContext';
-import PracticeCalendar from "./PracticeCalendar";
-import FormatDate from "./functions/FormatDate";
-import ExpandMore from "./functions/ExpandMore";
+import CloseIcon from '@mui/icons-material/Close';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { Box, Button, Collapse, Container, Fab, FormControlLabel, Grid, IconButton, MenuItem, Modal, Select, Switch, Typography } from "@mui/material";
+import 'leaflet/dist/leaflet.css';
+import { useContext, useEffect, useRef, useState } from "react";
 import { fetchPracticeTypes } from "../api/PracticeTypeApi";
-import { fetchLocations } from "../api/LocationApi";
+import '../assets/css/Styles.css';
+import AddPracticeForm from "./AddPracticeForm";
+import LocationsMap from './LocationsMap';
+import PracticeCalendar from "./PracticeCalendar";
+import PracticeCard from './PracticeCard';
+import { PracticeCalendarContext } from './contexts/PracticeCalendarContext';
+import { PracticesContext } from './contexts/PracticesContext';
+import ExpandMore from "./functions/ExpandMore";
+import FormatDate from "./functions/FormatDate";
 
 function PracticeList() {
 
@@ -69,10 +70,6 @@ function PracticeList() {
         }
         return -1;
     };
-
-    console.log("type" + typeFilter);
-    console.log("loca:" + locationFilter);
-
 
     //Tämä scrollauksen logiikka on täysin chatgpt:n visioima, ja muutenkin hinkattu sillä kuntoon,
     // että kuuluuko tätä sitten varsinaisesti koulutyöhön arvioida. 
@@ -173,7 +170,7 @@ function PracticeList() {
                     <PracticeCalendar />
                 </Collapse>
             </Container>
-            <Typography sx={{paddingBottom:2}}>{info}</Typography>
+            <Typography sx={{ paddingBottom: 2 }}>{info}</Typography>
             <Modal
                 open={openModal}
                 onClose={handleClose}

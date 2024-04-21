@@ -8,6 +8,7 @@ import { useContext, useState } from 'react';
 import MenuIcon from '@mui/icons-material/Menu';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { red } from '@mui/material/colors';
+import LocationsMap from './LocationsMap';
 
 
 const PracticeCard = ({ practice, formattedDate, done, setLocationFilter, setTypeFilter, setInfo }) => {
@@ -27,6 +28,8 @@ const PracticeCard = ({ practice, formattedDate, done, setLocationFilter, setTyp
             return updatedStates;
         });
     };
+
+    console.log(practice.locationLat);
 
     const FilterLink = ({ onClick, label, value }) => (
         <Typography
@@ -166,6 +169,11 @@ const PracticeCard = ({ practice, formattedDate, done, setLocationFilter, setTyp
             <Collapse in={expandedStates[practice.id]} timeout="auto" unmountOnExit>
                 <CardContent>
                     <Typography paragraph >{practice.notes}</Typography>
+                    <LocationsMap
+                        position={[practice.locationLat, practice.locationLong]}
+                        zoom={13}
+                        size={{ width: '100%', height: '200px' }}
+                    />
                 </CardContent>
             </Collapse>
 

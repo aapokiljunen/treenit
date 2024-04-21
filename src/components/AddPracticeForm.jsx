@@ -4,10 +4,10 @@ import PracticeCalendar from "./PracticeCalendar";
 import FormatDate from './functions/FormatDate';
 import { PracticeCalendarContext } from './contexts/PracticeCalendarContext';
 import { fetchPracticeTypes } from "../api/PracticeTypeApi";
-import { fetchLocations } from "../api/LocationApi";
 import { addPractice } from "../api/PracticeApi";
 import { PracticesContext } from './contexts/PracticesContext';
 import AddBoxIcon from '@mui/icons-material/AddBox';
+import { LocationsContext } from "./contexts/LocationsContext";
 
 function AddPracticeForm() {
     const [practice, setPractice] = useState({
@@ -20,9 +20,9 @@ function AddPracticeForm() {
     });
     const [info, setInfo] = useState('')
     const [practiceTypes, setPracticeTypes] = useState();
-    const [locations, setLocations] = useState();
     const { calendarValue } = useContext(PracticeCalendarContext);
     const { getPractices } = useContext(PracticesContext);
+    const { locations } = useContext(LocationsContext)
 
     const handleDate = () => {
         console.log(calendarValue);
@@ -71,18 +71,9 @@ function AddPracticeForm() {
         }
     };
 
-    const getLocations = async () => {
-        try {
-            const locations = await fetchLocations();
-            setLocations(locations.data);
-        } catch (error) {
-            console.error('Virhe sijaintien hakemisessa:', error);
-        }
-    };
 
     useEffect(() => {
         getPracticeTypes();
-        getLocations();
     }, []);
 
     return (
