@@ -5,8 +5,6 @@ Small react+mui+node project for a front-end course in Haaga-Helia University of
 
 ## Todo
 
--uuden lokaation lisäys
--kartta
 -harjoituksen oma sivu/editointi
 -mahdollisesti kuvat
 (-dashboard?)

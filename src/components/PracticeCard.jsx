@@ -1,14 +1,14 @@
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { Avatar, Card, CardActions, CardContent, CardHeader, CardMedia, Checkbox, Collapse, FormControlLabel, IconButton, Menu, MenuItem, Switch, Tooltip, Typography } from "@mui/material";
-import { getPractice, handleUpdatePractice, deletePractice } from "../api/PracticeApi";
-import { getTypeColor } from "../layouts/Colors";
-import ExpandMore from './functions/ExpandMore';
-import { PracticesContext } from './contexts/PracticesContext';
-import { useContext, useState } from 'react';
-import MenuIcon from '@mui/icons-material/Menu';
 import DeleteIcon from '@mui/icons-material/Delete';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import MenuIcon from '@mui/icons-material/Menu';
+import { Avatar, Card, CardActions, CardContent, CardHeader, CardMedia, Checkbox, Collapse, FormControlLabel, IconButton, Menu, MenuItem, Tooltip, Typography } from "@mui/material";
 import { red } from '@mui/material/colors';
+import { useContext, useState } from 'react';
+import { deletePractice, getPractice, handleUpdatePractice } from "../api/PracticeApi";
+import { getTypeColor } from "../layouts/Colors";
 import LocationsMap from './LocationsMap';
+import { PracticesContext } from './contexts/PracticesContext';
+import ExpandMore from './functions/ExpandMore';
 
 
 const PracticeCard = ({ practice, formattedDate, done, setLocationFilter, setTypeFilter, setInfo }) => {
@@ -28,8 +28,6 @@ const PracticeCard = ({ practice, formattedDate, done, setLocationFilter, setTyp
             return updatedStates;
         });
     };
-
-    console.log(practice.locationLat);
 
     const FilterLink = ({ onClick, label, value }) => (
         <Typography
@@ -51,7 +49,6 @@ const PracticeCard = ({ practice, formattedDate, done, setLocationFilter, setTyp
     };
 
     const filterLocation = (filterValue) => {
-        console.log("filter" + filterValue);
         setLocationFilter(filterValue);
         setInfo(`Näytetään harjoitukset sijainnissa ${filterValue}`);
         setTypeFilter(0);

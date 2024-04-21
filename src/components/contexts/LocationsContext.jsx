@@ -29,7 +29,7 @@ const LocationsProvider = ({ children }) => {
         );
     };
     return (
-        <LocationsContext.Provider value={{ locations, setLocations }}>
+        <LocationsContext.Provider value={{ locations, setLocations, getLocations }}>
             {children}
         </LocationsContext.Provider>
     );

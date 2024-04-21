@@ -1,13 +1,15 @@
-import { useContext, useEffect, useState } from "react";
-import { TextField, Button, Box, MenuItem, Select, Stack, Typography, IconButton, Container } from "@mui/material";
-import PracticeCalendar from "./PracticeCalendar";
-import FormatDate from './functions/FormatDate';
-import { PracticeCalendarContext } from './contexts/PracticeCalendarContext';
-import { fetchPracticeTypes } from "../api/PracticeTypeApi";
-import { addPractice } from "../api/PracticeApi";
-import { PracticesContext } from './contexts/PracticesContext';
 import AddBoxIcon from '@mui/icons-material/AddBox';
+import { Box, Button, IconButton, MenuItem, Modal, Select, Stack, TextField, Typography } from "@mui/material";
+import { useContext, useEffect, useState } from "react";
+import { addPractice } from "../api/PracticeApi";
+import { fetchPracticeTypes } from "../api/PracticeTypeApi";
+import PracticeCalendar from "./PracticeCalendar";
 import { LocationsContext } from "./contexts/LocationsContext";
+import { PracticeCalendarContext } from './contexts/PracticeCalendarContext';
+import { PracticesContext } from './contexts/PracticesContext';
+import FormatDate from './functions/FormatDate';
+import AddLocationForm from './AddLocationForm';
+import CloseIcon from '@mui/icons-material/Close';
 
 function AddPracticeForm() {
     const [practice, setPractice] = useState({
@@ -22,10 +24,10 @@ function AddPracticeForm() {
     const [practiceTypes, setPracticeTypes] = useState();
     const { calendarValue } = useContext(PracticeCalendarContext);
     const { getPractices } = useContext(PracticesContext);
-    const { locations } = useContext(LocationsContext)
+    const { locations } = useContext(LocationsContext);
+    const [openModal, setOpenModal] = useState(false);
 
     const handleDate = () => {
-        console.log(calendarValue);
         setPractice({ ...practice, date: FormatDate(calendarValue) });
     }
 
@@ -35,6 +37,7 @@ function AddPracticeForm() {
         }
     }, [practice.date]);
 
+    console.log(practice);
     const handleAdd = async () => {
         if (!practice.description || !practice.date || practice.typeId == 0 || practice.locationId == 0) {
             setInfo('Kenttä tyhjä. Ei voida lisätä tapahtumaa');
@@ -71,6 +74,9 @@ function AddPracticeForm() {
         }
     };
 
+    const handleClose = () => {
+        setOpenModal(false);
+    };
 
     useEffect(() => {
         getPracticeTypes();
@@ -78,6 +84,21 @@ function AddPracticeForm() {
 
     return (
         <Box sx={{ padding: 5 }}>
+            <Modal
+                open={openModal}
+                onClose={handleClose}
+                aria-labelledby='overlay-title'
+            >
+                <Box className="modalContent">
+                    <IconButton
+                        variant='contained'
+                        onClick={handleClose}
+                        sx={{ float: 'right' }}>
+                        <CloseIcon />
+                    </IconButton>
+                    <AddLocationForm />
+                </Box>
+            </Modal>
             <Stack spacing={2} sx={{ width: 500 }}>
                 <Typography variant="h5">Lisää uusi harjoitus</Typography>
                 <TextField

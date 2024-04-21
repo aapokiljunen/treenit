@@ -6,6 +6,7 @@ import theme from './layouts/Theme';
 import { PracticesProvider } from './components/contexts/PracticesContext';
 import { PracticeCalendarProvider } from './components/contexts/PracticeCalendarContext';
 import { LocationsProvider } from './components/contexts/LocationsContext';
+import { ClickMarkerProvider } from './components/contexts/ClickMarkerContext';
 
 function App() {
     return (
@@ -13,8 +14,10 @@ function App() {
             <LocationsProvider>
                 <PracticesProvider>
                     <PracticeCalendarProvider>
-                        <CssBaseline />
-                        <RouterProvider router={router} />
+                        <ClickMarkerProvider>
+                            <CssBaseline />
+                            <RouterProvider router={router} />
+                        </ClickMarkerProvider>
                     </PracticeCalendarProvider>
                 </PracticesProvider>
             </LocationsProvider>

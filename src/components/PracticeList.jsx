@@ -2,18 +2,17 @@ import AddIcon from '@mui/icons-material/Add';
 import CloseIcon from '@mui/icons-material/Close';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { Box, Button, Collapse, Container, Fab, FormControlLabel, Grid, IconButton, MenuItem, Modal, Select, Switch, Typography } from "@mui/material";
-import 'leaflet/dist/leaflet.css';
 import { useContext, useEffect, useRef, useState } from "react";
 import { fetchPracticeTypes } from "../api/PracticeTypeApi";
-import '../assets/css/Styles.css';
 import AddPracticeForm from "./AddPracticeForm";
-import LocationsMap from './LocationsMap';
 import PracticeCalendar from "./PracticeCalendar";
 import PracticeCard from './PracticeCard';
 import { PracticeCalendarContext } from './contexts/PracticeCalendarContext';
 import { PracticesContext } from './contexts/PracticesContext';
 import ExpandMore from "./functions/ExpandMore";
 import FormatDate from "./functions/FormatDate";
+import '../assets/css/Styles.css';
+import 'leaflet/dist/leaflet.css';
 
 function PracticeList() {
 
@@ -79,10 +78,8 @@ function PracticeList() {
         const cardIndex = findDaysPractice();
         if (cardIndex !== -1) {
             const gridElement = gridRef.current;
-            console.log(gridElement);
             if (gridElement) {
                 const selectedGridItem = gridElement.querySelector(`[data-key="${cardIndex}"] .MuiCard-root`);
-                console.log(selectedGridItem);
                 if (selectedGridItem) {
                     selectedGridItem.scrollIntoView({
                         behavior: 'smooth',
@@ -158,6 +155,11 @@ function PracticeList() {
                     value={typeFilter}
                     onChange={(e) => filterType(e.target.value)}
                     size="small"
+                    style={{
+                        marginLeft: "5px",
+                        marginBottom: "5px"
+
+                    }}
                 >
                     <MenuItem value={0} disabled size="inherit">
                         Näytä harjoitustyyppi
@@ -175,7 +177,6 @@ function PracticeList() {
                 open={openModal}
                 onClose={handleClose}
                 aria-labelledby='overlay-title'
-                aria-describedby='overlay-description'
             >
                 <Box className="modalContent">
                     <IconButton variant='contained' onClick={handleClose} sx={{ float: 'right' }}>

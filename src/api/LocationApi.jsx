@@ -10,3 +10,13 @@ export const fetchLocations = async () => {
         throw error;
     }
 };
+
+export const addLocation = async (newLocation) => {
+    try {
+        const response = await axios.post(`${API_URL}/location/add`, newLocation);
+        console.log(response.data); 
+    } catch (error) {
+        console.error('Error adding practice:', error);
+        throw error;
+    }
+};
