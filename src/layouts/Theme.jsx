@@ -15,6 +15,9 @@ const theme = createTheme({
         text: {
             primary: blueGrey[800]
         },
+        background: {
+            default: blueGrey[50]
+        }
     },
     typography: {
         fontFamily: "'Figtree'",

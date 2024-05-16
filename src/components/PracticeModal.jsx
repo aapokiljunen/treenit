@@ -1,7 +1,7 @@
 import AddBoxIcon from '@mui/icons-material/AddBox';
 import { Box, Button, FormControlLabel, IconButton, MenuItem, Modal, Select, Stack, Switch, TextField, Typography } from "@mui/material";
 import { useContext, useEffect, useState } from "react";
-import { addPractice } from "../api/PracticeApi";
+import { addPractice, getPractice} from "../api/PracticeApi";
 import { fetchPracticeTypes } from "../api/PracticeTypeApi";
 import PracticeCalendar from "./PracticeCalendar";
 import { LocationsContext } from "./contexts/LocationsContext";
@@ -11,22 +11,15 @@ import FormatDate from './functions/FormatDate';
 import AddLocationForm from './AddLocationForm';
 import CloseIcon from '@mui/icons-material/Close';
 
-function AddPracticeForm() {
-    const [practice, setPractice] = useState({
-        description: '',
-        notes: '',
-        date: '',
-        done: 0,
-        locationId: 0,
-        typeId: 0,
-    });
+function PracticeModal(id) {
+    const [practice, setPractice] = useState({});
     const [info, setInfo] = useState('')
     const [practiceTypes, setPracticeTypes] = useState();
     const { calendarValue } = useContext(PracticeCalendarContext);
     const { getPractices } = useContext(PracticesContext);
     const { locations } = useContext(LocationsContext);
-    const [openModal, setOpenModal] = useState(false);
     const [weekly, setWeekly] = useState(false);
+    const [editOn, setEditOn] = useState(false);
 
     const handleDate = () => {
         setPractice({ ...practice, date: FormatDate(calendarValue) });
@@ -86,31 +79,26 @@ function AddPracticeForm() {
         }
     };
 
+    const getPractice = async () => {
+        try {
+            const practice = await getPractice(id);
+            setPractice(practice);
+        } catch (error) {
+            console.error('Virhe tyyppien hakemisessa:', error);
+        }
+    };
+
     const handleClose = () => {
         setOpenModal(false);
     };
 
     useEffect(() => {
         getPracticeTypes();
+        getPractice();
     }, []);
 
     return (
         <Box sx={{ padding: 5 }}>
-            <Modal
-                open={openModal}
-                onClose={handleClose}
-                aria-labelledby='overlay-title'
-            >
-                <Box className="modalContent">
-                    <IconButton
-                        variant='contained'
-                        onClick={handleClose}
-                        sx={{ float: 'right' }}>
-                        <CloseIcon />
-                    </IconButton>
-                    <AddLocationForm />
-                </Box>
-            </Modal>
             <Stack spacing={2} sx={{ width: 500 }}>
                 <Typography variant="h5">Lisää uusi harjoitus</Typography>
                 <TextField

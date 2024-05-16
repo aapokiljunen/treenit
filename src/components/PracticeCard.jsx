@@ -11,7 +11,7 @@ import { PracticesContext } from './contexts/PracticesContext';
 import ExpandMore from './functions/ExpandMore';
 
 
-const PracticeCard = ({ practice, formattedDate, done, setLocationFilter, setTypeFilter, setInfo }) => {
+const PracticeCard = ({ practice, formattedDate, done, setLocationFilter, setTypeFilter, setInfo, setModalContent, setOpenModal }) => {
 
     const { practices, setPractices } = useContext(PracticesContext);
     const { getPractices } = useContext(PracticesContext);
@@ -85,10 +85,11 @@ const PracticeCard = ({ practice, formattedDate, done, setLocationFilter, setTyp
     };
 
     return (
-        <Card sx={{
-            width: 315,
-            bgcolor: getTypeColor(practice.done ? 'done' : practice.typeId)[100]
-        }}>
+        <Card
+            sx={{
+                width: 300,
+                bgcolor: getTypeColor(practice.done ? 'done' : practice.typeId)[100]
+            }}>
             <CardHeader
                 avatar={
                     <Tooltip title={practice.typeName}>
@@ -124,12 +125,16 @@ const PracticeCard = ({ practice, formattedDate, done, setLocationFilter, setTyp
                 </MenuItem>
             </Menu>
             <CardMedia
+                onClick={() => {
+                    setModalContent(practice.id);
+                    setOpenModal(true);
+                }}
                 component='img'
-                height='315'
+                height='300'
                 image={practice.image || `src/assets/pics/defaultpics/${practice.typeId}.jpg`}
                 alt={`${practice.typeName} kuva`}
                 title={practice.typeName}
-                sx={{ ...(done && { opacity: .4 }) }}
+                sx={{ ...(done && { opacity: .4 }), cursor:'pointer'}}
             />
             <CardContent>
                 <Typography variant='body2' color='text.secondary'>

@@ -1,12 +1,11 @@
-import React, { useContext, useEffect, useState } from 'react';
+import { Container, Paper } from '@mui/material';
+import React, { useContext, useEffect } from 'react';
 import Calendar from 'react-calendar';
-import '/src/assets/css/Calendar.css';
-import { PracticesContext } from './contexts/PracticesContext';
-import { PracticeCalendarContext } from './contexts/PracticeCalendarContext';
 import { getTypeColor } from '../layouts/Colors';
-import { Container, Paper, Typography } from '@mui/material';
+import { PracticeCalendarContext } from './contexts/PracticeCalendarContext';
+import { PracticesContext } from './contexts/PracticesContext';
 import FormatDate from './functions/FormatDate';
-import { ContentPasteSearchOutlined } from '@mui/icons-material';
+import '/src/assets/css/Calendar.css';
 
 export default function PracticeCalendar() {
 

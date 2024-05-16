@@ -27,7 +27,7 @@ function PracticeList() {
     const gridRef = useRef(null);
     const [openModal, setOpenModal] = useState(false);
     const [practiceTypes, setPracticeTypes] = useState([]);
-    const [locations, setLocations] = useState([]);
+    const [modalContent, setModalContent] = useState('');
 
     const clearFilters = () => {
         setTypeFilter(0);
@@ -43,6 +43,8 @@ function PracticeList() {
             console.error('Virhe tyyppien hakemisessa:', error);
         }
     };
+
+    console.log(modalContent)
 
     const filterType = (filterValue) => {
         setTypeFilter(filterValue);
@@ -70,7 +72,7 @@ function PracticeList() {
         return -1;
     };
 
-    //Tämä scrollauksen logiikka on täysin chatgpt:n visioima, ja muutenkin hinkattu sillä kuntoon,
+    //Tämä scrollauksen logiikka on aika pitkälti chatGPT:llä luotu,
     // että kuuluuko tätä sitten varsinaisesti koulutyöhön arvioida. 
     //Sinällään kyllä hemmetin tyytyväinen olen kun sain pitkän taistelun jälkeen toimimaan
 
@@ -88,7 +90,7 @@ function PracticeList() {
                     selectedGridItem.classList.add('highlight-effect');
                     setTimeout(() => {
                         selectedGridItem.classList.remove('highlight-effect');
-                    }, 1500);
+                    }, 2500);
                 }
             }
         }
@@ -108,7 +110,11 @@ function PracticeList() {
                 color='primary'
                 aria-label='add'
                 size='large'
-                onClick={() => setOpenModal(true)}
+                onClick={() => {
+                    setModalContent('addPractice');
+                    setOpenModal(true);
+                }
+                }
                 sx={{
                     float: 'right',
                     marginRight: 5
@@ -124,6 +130,7 @@ function PracticeList() {
                     width: 530,
                     marginLeft: 0,
                     marginBottom: 2,
+                    bgcolor: 'white'
                 }}
             >
                 <ExpandMore
@@ -156,9 +163,8 @@ function PracticeList() {
                     onChange={(e) => filterType(e.target.value)}
                     size="small"
                     style={{
-                        marginLeft: "5px",
-                        marginBottom: "5px"
-
+                        marginLeft: '5px',
+                        marginTop: '2px',
                     }}
                 >
                     <MenuItem value={0} disabled size="inherit">
@@ -172,7 +178,16 @@ function PracticeList() {
                     <PracticeCalendar />
                 </Collapse>
             </Container>
-            <Typography sx={{ paddingBottom: 2 }}>{info}</Typography>
+            {
+                (typeFilter > 0 || locationFilter > 0) &&
+                <Button
+                    variant='contained'
+                    onClick={clearFilters}
+                    sx={{ marginBottom: 2 }}
+                >
+                    Näytä kaikki harjoitukset
+                </Button>
+            }
             <Modal
                 open={openModal}
                 onClose={handleClose}
@@ -182,10 +197,10 @@ function PracticeList() {
                     <IconButton variant='contained' onClick={handleClose} sx={{ float: 'right' }}>
                         <CloseIcon />
                     </IconButton>
-                    <AddPracticeForm />
+                    {(modalContent == 'addPractice' && <AddPracticeForm />)}
                 </Box>
             </Modal>
-            <Grid ref={gridRef} container spacing={4}>
+            <Grid ref={gridRef} container spacing={3}>
                 {practices.map((practice, index) => {
                     const showType = practice.typeId == typeFilter || typeFilter == 0;
                     const showLocation = practice.locationId == locationFilter || locationFilter == 0;
@@ -204,16 +219,14 @@ function PracticeList() {
                                     setLocationFilter={setLocationFilter}
                                     setTypeFilter={setTypeFilter}
                                     setInfo={setInfo}
+                                    setModalContent={setModalContent}
+                                    setOpenModal={setOpenModal}
                                 />
                             </Grid>
                         );
                     }
                 })}
             </Grid>
-            {
-                (typeFilter > 0 || locationFilter > 0) &&
-                <div><Button sx={{ marginTop: 2 }} variant='contained' onClick={clearFilters}>Näytä kaikki harjoitukset</Button></div>
-            }
         </Box >
     );
 };

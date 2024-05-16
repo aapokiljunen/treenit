@@ -10,7 +10,7 @@
 }
 
 .highlight-effect {
-    animation: flash 3s infinite alternate;
+    animation: flash 4s infinite alternate;
 }
 
 @keyframes flash {
