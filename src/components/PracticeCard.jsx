@@ -3,8 +3,8 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import MenuIcon from '@mui/icons-material/Menu';
 import { Avatar, Card, CardActions, CardContent, CardHeader, CardMedia, Checkbox, Collapse, FormControlLabel, IconButton, Menu, MenuItem, Tooltip, Typography } from "@mui/material";
 import { red } from '@mui/material/colors';
-import { useContext, useState } from 'react';
-import { deletePractice, getPractice, handleUpdatePractice } from "../api/PracticeApi";
+import { useContext, useEffect, useState } from 'react';
+import { deletePractice, getPractice, getImage, handleUpdatePractice } from "../api/PracticeApi";
 import { getTypeColor } from "../layouts/Colors";
 import LocationsMap from './LocationsMap';
 import { PracticesContext } from './contexts/PracticesContext';
@@ -17,6 +17,7 @@ const PracticeCard = ({ practice, formattedDate, done, setLocationFilter, setTyp
     const { getPractices } = useContext(PracticesContext);
     const [anchorEl, setAnchorEl] = useState(false);
     const [expandedStates, setExpandedStates] = useState([]);
+    const [practiceImage, setPracticeImage] = useState(null);
 
     const handleExpandClick = (id) => {
         if (!expandedStates.hasOwnProperty(id)) {
@@ -83,6 +84,24 @@ const PracticeCard = ({ practice, formattedDate, done, setLocationFilter, setTyp
     const handleDeleteMenuClose = () => {
         setAnchorEl(null);
     };
+    const getThisImage = async () => {
+        if (practice.image) {
+            try {
+                const imageData = await getImage(practice.image);
+                if (imageData && imageData.data) {
+                    setPracticeImage(imageData.data);
+                } else {
+                    console.error('Empty or invalid image data received');
+                }
+            } catch (error) {
+                console.error('Error fetching image:', error);
+            }
+        }
+    };
+
+    useEffect(() => {
+        getThisImage();
+    }, []);
 
     return (
         <Card
@@ -93,7 +112,9 @@ const PracticeCard = ({ practice, formattedDate, done, setLocationFilter, setTyp
             <CardHeader
                 avatar={
                     <Tooltip title={practice.typeName}>
-                        <Avatar sx={{ bgcolor: getTypeColor(practice.typeId)[500] }} aria-label='typeAvatar'>
+                        <Avatar
+                            sx={{ bgcolor: getTypeColor(practice.typeId)[500] }}
+                            aria-label='typeAvatar'>
                             {practice.typeName.charAt(0)}
                         </Avatar>
                     </Tooltip>
@@ -131,10 +152,10 @@ const PracticeCard = ({ practice, formattedDate, done, setLocationFilter, setTyp
                 }}
                 component='img'
                 height='300'
-                image={practice.image || `src/assets/pics/defaultpics/${practice.typeId}.jpg`}
+                image={practiceImage || `src/assets/pics/defaultpics/${practice.typeId}.jpg`}
                 alt={`${practice.typeName} kuva`}
                 title={practice.typeName}
-                sx={{ ...(done && { opacity: .4 }), cursor:'pointer'}}
+                sx={{ ...(done && { opacity: .4 }), cursor: 'pointer' }}
             />
             <CardContent>
                 <Typography variant='body2' color='text.secondary'>

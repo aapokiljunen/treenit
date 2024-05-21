@@ -44,7 +44,6 @@ function AddLocationForm() {
             setLocation({ ...location, longitude: clickMarker.lng, latitude: clickMarker.lat });
 
         }
-        console.log(location)
     }, [clickMarker]);
 
 

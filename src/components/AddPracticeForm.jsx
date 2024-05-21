@@ -1,7 +1,7 @@
 import AddBoxIcon from '@mui/icons-material/AddBox';
 import { Box, Button, FormControlLabel, IconButton, MenuItem, Modal, Select, Stack, Switch, TextField, Typography } from "@mui/material";
 import { useContext, useEffect, useState } from "react";
-import { addPractice } from "../api/PracticeApi";
+import { addPractice, addImage } from "../api/PracticeApi";
 import { fetchPracticeTypes } from "../api/PracticeTypeApi";
 import PracticeCalendar from "./PracticeCalendar";
 import { LocationsContext } from "./contexts/LocationsContext";
@@ -16,6 +16,7 @@ function AddPracticeForm() {
         description: '',
         notes: '',
         date: '',
+        image: null,
         done: 0,
         locationId: 0,
         typeId: 0,
@@ -27,10 +28,13 @@ function AddPracticeForm() {
     const { locations } = useContext(LocationsContext);
     const [openModal, setOpenModal] = useState(false);
     const [weekly, setWeekly] = useState(false);
+    const [newImage, setNewImage] = useState(null);
 
     const handleDate = () => {
         setPractice({ ...practice, date: FormatDate(calendarValue) });
     }
+
+    console.log("practi", practice)
 
     useEffect(() => {
         if (practice.date !== '') {
@@ -43,12 +47,19 @@ function AddPracticeForm() {
             setInfo('Kenttä tyhjä. Ei voida lisätä tapahtumaa');
         } else {
             try {
+                if(newImage) {
+                    const formData = new FormData();
+                    formData.append('image', newImage);
+                    const response = await addImage(formData);
+                    setInfo('Ladataan kuvaa')
+                }
+                setInfo('')
                 if (weekly) {
                     for (let i = 0; i < 10; i++) {
                         const newDate = new Date(practice.date);
                         newDate.setDate(newDate.getDate() + 7 * i);
                         const formattedDate = FormatDate(newDate);
-                        await addPractice({ ...practice, date: formattedDate });
+                        await addPractice({...pracice, date: formattedDate});
                     };
 
                     setInfo(`Lisättiin viikottain toistuva harjoitus ${practice.description}`);
@@ -58,6 +69,7 @@ function AddPracticeForm() {
                         description: '',
                         notes: '',
                         date: '',
+                        image: null,
                         done: 0,
                         locationId: 1,
                         typeId: 0
@@ -76,6 +88,13 @@ function AddPracticeForm() {
         setPractice({ ...practice, [e.target.name]: e.target.value });
         setInfo('');
     }
+
+    const handleImage = (e) => {
+        const file = e.target.files[0];
+        setPractice({...practice, 'image': file.name })
+        setNewImage(file);
+        setInfo('');
+    };
 
     const getPracticeTypes = async () => {
         try {
@@ -176,6 +195,10 @@ function AddPracticeForm() {
                     size="small"
                 />
                 <PracticeCalendar />
+                <TextField 
+                    type='file'
+                    onChange={handleImage}
+                />
                 <FormControlLabel
                     control={
                         <Switch

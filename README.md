@@ -3,8 +3,4 @@
 Small react+mui+node project for a front-end course in Haaga-Helia University of Applied Sciences.
 
 
-## Todo
-
--harjoituksen oma sivu/editointi
--mahdollisesti kuvat
-(-dashboard?)
+Pics: Microsoft Desinger Ai

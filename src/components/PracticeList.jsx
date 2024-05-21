@@ -7,6 +7,7 @@ import { fetchPracticeTypes } from "../api/PracticeTypeApi";
 import AddPracticeForm from "./AddPracticeForm";
 import PracticeCalendar from "./PracticeCalendar";
 import PracticeCard from './PracticeCard';
+import PracticeModal from './PracticeModal'
 import { PracticeCalendarContext } from './contexts/PracticeCalendarContext';
 import { PracticesContext } from './contexts/PracticesContext';
 import ExpandMore from "./functions/ExpandMore";
@@ -43,8 +44,6 @@ function PracticeList() {
             console.error('Virhe tyyppien hakemisessa:', error);
         }
     };
-
-    console.log(modalContent)
 
     const filterType = (filterValue) => {
         setTypeFilter(filterValue);
@@ -197,7 +196,10 @@ function PracticeList() {
                     <IconButton variant='contained' onClick={handleClose} sx={{ float: 'right' }}>
                         <CloseIcon />
                     </IconButton>
-                    {(modalContent == 'addPractice' && <AddPracticeForm />)}
+                    {modalContent == 'addPractice' && <AddPracticeForm />}
+                    {modalContent != 'addPractice' &&
+                        <PracticeModal
+                            id={parseInt(modalContent)} />}
                 </Box>
             </Modal>
             <Grid ref={gridRef} container spacing={3}>
