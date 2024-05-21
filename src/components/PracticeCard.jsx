@@ -4,7 +4,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import { Avatar, Card, CardActions, CardContent, CardHeader, CardMedia, Checkbox, Collapse, FormControlLabel, IconButton, Menu, MenuItem, Tooltip, Typography } from "@mui/material";
 import { red } from '@mui/material/colors';
 import { useContext, useEffect, useState } from 'react';
-import { deletePractice, getPractice, getImage, handleUpdatePractice } from "../api/PracticeApi";
+import { deletePractice, getPractice, handleUpdatePractice } from "../api/PracticeApi";
 import { getTypeColor } from "../layouts/Colors";
 import LocationsMap from './LocationsMap';
 import { PracticesContext } from './contexts/PracticesContext';
@@ -13,6 +13,7 @@ import ExpandMore from './functions/ExpandMore';
 
 const PracticeCard = ({ practice, formattedDate, done, setLocationFilter, setTypeFilter, setInfo, setModalContent, setOpenModal }) => {
 
+    const API_URL = 'http://localhost:8081';
     const { practices, setPractices } = useContext(PracticesContext);
     const { getPractices } = useContext(PracticesContext);
     const [anchorEl, setAnchorEl] = useState(false);
@@ -80,28 +81,17 @@ const PracticeCard = ({ practice, formattedDate, done, setLocationFilter, setTyp
             console.error('Virhe poistaessa harjoitusta: ', error);
         }
     };
-
+    
     const handleDeleteMenuClose = () => {
         setAnchorEl(null);
     };
-    const getThisImage = async () => {
-        if (practice.image) {
-            try {
-                const imageData = await getImage(practice.image);
-                if (imageData && imageData.data) {
-                    setPracticeImage(imageData.data);
-                } else {
-                    console.error('Empty or invalid image data received');
-                }
-            } catch (error) {
-                console.error('Error fetching image:', error);
-            }
-        }
-    };
 
     useEffect(() => {
-        getThisImage();
-    }, []);
+        if (practice.image) {
+            const imageUrl = `${API_URL}/practice/images/${practice.image}`;
+            setPracticeImage(imageUrl);
+        }
+    }, [practice.image]);
 
     return (
         <Card

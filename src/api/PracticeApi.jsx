@@ -50,16 +50,6 @@ export const addImage = async (newImage) => {
     }
 };
 
-export const getImage = async (name) => {
-    try {
-        const response = await axios.get(`${API_URL}/practice/getImage/${name}`);
-        console.log(response.data);
-        return response.data;
-    } catch (error) {
-        console.error('Error getting an image:', error);
-        throw error;
-    }
-};
 
 export const deletePractice = async (id) => {
     try {

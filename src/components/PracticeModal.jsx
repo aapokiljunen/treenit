@@ -1,5 +1,5 @@
 import EditIcon from '@mui/icons-material/Edit';
-import { Box, Button, Checkbox, Divider, FormControlLabel, IconButton, Stack, TextField, Typography } from "@mui/material";
+import { Box, Button, Checkbox, Divider, FormControlLabel, IconButton, Paper, Stack, TextField, Typography, withTheme } from "@mui/material";
 import { useContext, useEffect, useState } from "react";
 import { getPractice, handleUpdatePractice } from "../api/PracticeApi";
 import LocationsMap from './LocationsMap';
@@ -9,11 +9,13 @@ import { PracticesContext } from './contexts/PracticesContext';
 import { getTypeColor } from "../layouts/Colors";
 
 function PracticeModal({ id }) {
+    const API_URL = 'http://localhost:8081';
     const [practice, setPractice] = useState({});
     const [info, setInfo] = useState('')
     const { getPractices } = useContext(PracticesContext);
     const [editOn, setEditOn] = useState(false);
     const date = new Date(practice.date);
+    const [practiceImage, setPracticeImage] = useState(null);
     const formattedDate = date.toLocaleString('fi-FI', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })
 
     const handleEdit = async () => {
@@ -83,6 +85,15 @@ function PracticeModal({ id }) {
         getThisPractice();
     }, []);
 
+    useEffect(() => {
+        if (practice.image) {
+            const imageUrl = `${API_URL}/practice/images/${practice.image}`;
+            setPracticeImage(imageUrl);
+        }
+    }, [practice.image]);
+
+    console.log("pracimg", practiceImage);
+
     return (
         <Box sx={{
             padding: 5,
@@ -110,6 +121,13 @@ function PracticeModal({ id }) {
                         <EditIcon />
                     </IconButton>
                 </Box>
+                {practiceImage &&
+                    (<Box
+                        component="img"
+                        src={practiceImage}
+                        sx={{ width: '100%', height: 400 }}>
+                    </Box>)
+                }
                 <Divider flexItem />
                 <Typography variant="subtitle">{formattedDate}</Typography>
                 <Typography>{practice.location}</Typography>
@@ -121,7 +139,7 @@ function PracticeModal({ id }) {
                     onChange={(e) => handleChange(e)}
                     inputProps={{ maxLength: 25 }}
                     size="small"
-                    sx={{bgcolor:'white'}}
+                    sx={{ bgcolor: 'white' }}
                 />)}
                 {!editOn && <Typography sx={{ fontWeight: 'bold' }}>{practice.description}</Typography>}
                 {editOn && (
@@ -133,7 +151,7 @@ function PracticeModal({ id }) {
                         onChange={(e) => handleChange(e)}
                         minRows={3}
                         size="small"
-                        sx={{bgcolor:'white'}}
+                        sx={{ bgcolor: 'white' }}
                     />)}
                 {!editOn && <Typography>{practice.notes}</Typography>}
 
@@ -153,6 +171,7 @@ function PracticeModal({ id }) {
                     <LocationsMap
                         position={[practice.locationLat, practice.locationLong]}
                         zoom={15}
+                        size={{width:'100%', height:400}}
                     />
                 }
                 <FormControlLabel
